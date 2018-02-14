@@ -215,12 +215,14 @@ public class GameLoop extends JComponent {
 		// get maximum fitness:
 		double maxscore = 0;
 		for (Snake s : snakes) {
-			if (s.getFitness() > maxscore) {
+			if (s.getFitness() > maxscore && ruleBased != s && currentSnake != s) {
 				maxscore = s.getFitness();
 			}
 		}
 		// Add snakes according to fitness
 		for (Snake s : snakes) {
+			if(ruleBased == s || currentSnake == s)
+				continue;
 			int amount = (int) (s.getFitness() * 100 / maxscore);
 			for (int i = 0; i < amount; i++) {
 				matingpool.add(s);
