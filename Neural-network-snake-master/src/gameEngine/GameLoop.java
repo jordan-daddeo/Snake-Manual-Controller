@@ -19,7 +19,7 @@ public class GameLoop extends JComponent {
 
 	// constants:
 	public static final int globalCircleRadius = 20;
-	public static final int numSnakes = 8;
+	public static final int numSnakes = 3;
 	public static final int numNibbles = 4;
 
 	// Genetics parameter initialization:
@@ -49,7 +49,8 @@ public class GameLoop extends JComponent {
 	// Statistics:
 	public LinkedList<Double> fitnessTimeline = new LinkedList<Double>();
 	public double currentMaxFitness = 0;
-	public double allTimeMaxFitness = 0;
+	public double allTimeMaxFitnessNN = 0;
+	public double currentMaxFitnessRuleBased = 0;
 
 	// Mode control:
 	public boolean singleSnakeModeActive = false;
@@ -151,9 +152,12 @@ public class GameLoop extends JComponent {
 									if (!s.update(world)) {
 										deadCount++;
 									}
-									if (s.getFitness() > currentMaxFitness)
+									if (s.getFitness() > currentMaxFitness && s!= ruleBased)
 										currentMaxFitness = s.getFitness();
-										if(currentMaxFitness > allTimeMaxFitness) allTimeMaxFitness = currentMaxFitness;
+										if(currentMaxFitness > allTimeMaxFitnessNN) allTimeMaxFitnessNN = currentMaxFitness;
+									if (s.getFitness() > currentMaxFitnessRuleBased && s == ruleBased){
+										currentMaxFitnessRuleBased = s.getFitness();
+									}
 									if (s.getFitness() > bestscore) {
 										bestscore = s.getFitness();
 										bestDna = s.dna;
@@ -254,7 +258,8 @@ public class GameLoop extends JComponent {
 			currentSnake = s;
 		} else if(runRuleBased && (ruleBased == null || ruleBased.deathFade <= 0 )) {
 			if(ruleBased != null) {
-				System.out.println("Rule-based: "+ruleBased.score+"\tBest NN: "+allTimeMaxFitness);
+				System.out.println("t: "+Long.toString(world.clock / 1000)+"\tRule-based: "+currentMaxFitnessRuleBased+"\t\tBest NN: "+allTimeMaxFitnessNN);
+				currentMaxFitnessRuleBased = 0;
 			}
 			s.ruled = true;
 			ruleBased = s;
