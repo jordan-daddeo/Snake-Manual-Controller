@@ -19,8 +19,8 @@ public class GameLoop extends JComponent {
 
 	// constants:
 	public static final int globalCircleRadius = 20;
-	public static final int numSnakes = 2;
-	public static final int numNibbles = 6;
+	public static final int numSnakes = 8;
+	public static final int numNibbles = 4;
 
 	// Genetics parameter initialization:
 	public static double mutationrate = .02;
@@ -277,6 +277,18 @@ public class GameLoop extends JComponent {
 			g.drawString("Mut. Prob.: " + String.format("%1$,.3f", mutationrate), 20, 305);
 			g.drawString("Max fitness: " + Integer.toString((int) currentMaxFitness), 20, 355);
 
+			if(runRuleBased && ruleBased != null && ruleBased.debugInputArray != null){
+				g.setFont(new Font("Arial", 0, 16));
+				g.drawString(ruleBased.debugOutput, 320, 180);
+				g.drawString("Rule based snake input (0 is wall, 1 is snake, 2 is food):", 320, 205);
+				for(int i = 0; i < ruleBased.debugInputArray.length; i++){
+					Snake.Thing t = ruleBased.debugInputArray[i];
+					g.drawString("#"+i+"-Type "+t.type+"-Distance: "+t.distance, 330, 225+20*i);
+				}
+				
+			}
+			
+			
 			// print timeline:
 			synchronized (fitnessTimeline) {
 				if (!fitnessTimeline.isEmpty()) {

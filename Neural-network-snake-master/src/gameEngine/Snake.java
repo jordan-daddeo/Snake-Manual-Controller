@@ -16,7 +16,7 @@ import neuralNetwork.Stage;
 public class Snake {
 
 	// Movement constants:
-	public static final double maximumForwardSpeed = 2.5;
+	public static final double maximumForwardSpeed = 5;
 	public static final double maximumAngularSpeed = Math.PI / 32d;
 	public static final double wallCollisionThreshold = 4;
 	// view constants:
@@ -52,6 +52,9 @@ public class Snake {
 	public double dir = 0.0;
 	public boolean manual = false; //is player-controlled
 	public boolean ruled = false;
+	
+	public Thing[] debugInputArray = null;
+	public String debugOutput = "";
 
 	/**
 	 * Initializes a new snake with given DNA
@@ -267,10 +270,12 @@ public class Snake {
 		}
 		double output[];
 		if(ruled) {
-			Random rand = new Random();
-			double z = rand.nextInt(100);
-			double o = rand.nextInt(80);
-			output = new double[] {z, o};
+			output = ruleBasedBrain(input);
+//			//Random movement
+//			Random rand = new Random();
+//			double z = rand.nextInt(100);
+//			double o = rand.nextInt(80);
+//			output = new double[] {z, o};
 		}
 		else
 			output = brainNet.calc(stageA);
@@ -281,6 +286,56 @@ public class Snake {
 		if (angleIncrement < -maximumAngularSpeed)
 			angleIncrement = -maximumAngularSpeed;
 		return angleIncrement;
+	}
+
+	private double[] ruleBasedBrain(Thing[] input) {
+		debugInputArray = input;
+
+		//closest food and danger
+		double foodAngle = -1;
+		double foodDist = Double.POSITIVE_INFINITY;
+		double safestAngle = -1;// direction of furthest danger
+		double dangerDist = Double.POSITIVE_INFINITY;
+		double safestDist = 0; //furthest danger
+		double selfDir = 0; //if this is nonzero, tries to avoid self
+		
+		for(int i = 0; i < input.length; i++){
+			Thing t = input[i];
+			if(t.type == 2 && t.distance < foodDist){
+				foodAngle = (i * (-maximumAngularSpeed * 2) / (input.length-1)) + maximumAngularSpeed;
+				foodDist = t.distance;
+			}
+			else{
+				if (t.distance < dangerDist){
+					dangerDist = t.distance;
+				}else if(t.distance > safestDist){
+					safestAngle = (i * (-maximumAngularSpeed * 2) / (input.length-1)) + maximumAngularSpeed;
+					safestDist = t.distance;
+				}
+				if(t.type == 1 && t.distance < 80){
+					if(i <= input.length /2){
+						selfDir = 1; 
+					}
+					if(i >= input.length / 2){
+						selfDir = -1;
+					}
+				}
+			}
+		}
+		
+		if(foodDist < dangerDist ){
+			debugOutput = "moving towards FOOD via "+foodAngle;
+			return new double[] {foodAngle, 0};
+		}
+		else {
+			//always move opposite from self
+			if(Math.signum(selfDir) == Math.signum(safestAngle)){
+				safestAngle = -Math.signum(selfDir) * maximumAngularSpeed;
+				debugOutput = "moving from DANGER (self) via "+safestAngle;
+			}
+			else debugOutput = "moving from DANGER via "+safestAngle;
+			return new double[] {safestAngle, 0};
+		}
 	}
 
 	/**
