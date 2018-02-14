@@ -152,7 +152,8 @@ public class GameLoop extends JComponent {
 										deadCount++;
 									}
 									if (s.getFitness() > currentMaxFitness)
-										allTimeMaxFitness = currentMaxFitness = s.getFitness();
+										currentMaxFitness = s.getFitness();
+										if(currentMaxFitness > allTimeMaxFitness) allTimeMaxFitness = currentMaxFitness;
 									if (s.getFitness() > bestscore) {
 										bestscore = s.getFitness();
 										bestDna = s.dna;
