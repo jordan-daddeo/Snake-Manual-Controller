@@ -49,6 +49,7 @@ public class GameLoop extends JComponent {
 	// Statistics:
 	public LinkedList<Double> fitnessTimeline = new LinkedList<Double>();
 	public double currentMaxFitness = 0;
+	public double allTimeMaxFitness = 0;
 
 	// Mode control:
 	public boolean singleSnakeModeActive = false;
@@ -151,7 +152,7 @@ public class GameLoop extends JComponent {
 										deadCount++;
 									}
 									if (s.getFitness() > currentMaxFitness)
-										currentMaxFitness = s.getFitness();
+										allTimeMaxFitness = currentMaxFitness = s.getFitness();
 									if (s.getFitness() > bestscore) {
 										bestscore = s.getFitness();
 										bestDna = s.dna;
@@ -252,7 +253,7 @@ public class GameLoop extends JComponent {
 			currentSnake = s;
 		} else if(runRuleBased && (ruleBased == null || ruleBased.deathFade <= 0 )) {
 			if(ruleBased != null) {
-				System.out.println(ruleBased.score);
+				System.out.println("Rule-based: "+ruleBased.score+"\tBest NN: "+allTimeMaxFitness);
 			}
 			s.ruled = true;
 			ruleBased = s;
