@@ -27,13 +27,10 @@ public class EStage {
 				sum += coeffs[i][j]*prev.output[j];
 			}
 			sum += coeffs[i][coeffs[0].length-1]*signalMultiplier;  //constant bias
-			output[i] = sigmoid(sum);
+			output[i] = sum;
 		}
 	}
-	public static double sigmoid(double x) {
-		//TODO: wtf is sigmoid
-		return 0.0;
-	}
+	
 	public String toString(){
 		String k = "[";
 		for (int i = 0; i< coeffs.length; i++){
