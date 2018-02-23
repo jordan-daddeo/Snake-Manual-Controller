@@ -11,7 +11,7 @@ import java.util.LinkedList;
 
 import javax.swing.JComponent;
 
-import genetics.DNA;
+import genetics.EDNA;
 
 public class ESGame extends JComponent {
 	// main update frequency:
@@ -29,15 +29,15 @@ public class ESGame extends JComponent {
 
 	// world and snakes initialization:
 	public World world = new World();
-	public LinkedList<Snake> snakes = new LinkedList<Snake>();
-	public LinkedList<Snake> backupSnakes = new LinkedList<Snake>(); // to
+	public LinkedList<ESnake> snakes = new LinkedList<ESnake>();
+	public LinkedList<ESnake> backupSnakes = new LinkedList<ESnake>(); // to
 																		// resume
 																		// from
 																		// single
 																		// mode
 	
 	// Best:
-	public DNA bestDna = null;
+	public EDNA bestDna = null;
 	public double bestscore = 0;
 
 	// Statistics:
@@ -84,7 +84,7 @@ public class ESGame extends JComponent {
 									backupSnakes.clear();
 									backupSnakes.addAll(snakes);
 									snakes.clear();
-									snakes.add(new Snake(bestDna, world));
+									snakes.add(new ESnake(bestDna, world));
 								}
 								break;
 							case 'A': // a = pause
@@ -119,7 +119,7 @@ public class ESGame extends JComponent {
 										statisticsLastMillis = world.clock;
 									}
 								}
-								for (Snake s : snakes) {
+								for (ESnake s : snakes) {
 									if (!s.update(world)) {
 										deadCount++;
 									}
@@ -146,9 +146,9 @@ public class ESGame extends JComponent {
 										currentGeneration += 1 / (double) numSnakes;
 									}
 								}
-								Iterator<Snake> it = snakes.iterator();
+								Iterator<ESnake> it = snakes.iterator();
 								while (it.hasNext()) {
-									Snake s = it.next();
+									ESnake s = it.next();
 									if (s.deathFade <= 0) {
 										it.remove();
 									}
@@ -177,7 +177,7 @@ public class ESGame extends JComponent {
 	public void firstGeneration(int n) {
 		snakes.clear();
 		for (int i = 0; i < n; i++) {
-			snakes.add(new Snake(null, world));
+			snakes.add(new ESnake(null, world));
 		}
 		world.reset();
 	}
@@ -187,9 +187,9 @@ public class ESGame extends JComponent {
 	 * 
 	 * @return Mating pool as list
 	 */
-	public ArrayList<Snake> makeMatingpool() {
+	public ArrayList<ESnake> makeMatingpool() {
 		//TODO: implement this???
-		ArrayList<Snake> matingpool = new ArrayList<Snake>();
+		ArrayList<ESnake> matingpool = new ArrayList<ESnake>();
 		return matingpool;
 	}
 
@@ -199,9 +199,9 @@ public class ESGame extends JComponent {
 	 */
 	public void newSnake() {
 		mutationrate = 10 / currentMaxFitness;
-		ArrayList<Snake> matingpool = makeMatingpool();
+		ArrayList<ESnake> matingpool = makeMatingpool();
 		//TODO: change crossover function and DNA representation
-		Snake s = new Snake(null, world);
+		ESnake s = new ESnake(null, world);
 		snakes.add(s);
 	}
 
@@ -250,7 +250,7 @@ public class ESGame extends JComponent {
 		}
 		// snakes:
 		synchronized (snakes) {
-			for (Snake s : snakes)
+			for (ESnake s : snakes)
 				s.draw(g);
 			world.draw(g);
 		}

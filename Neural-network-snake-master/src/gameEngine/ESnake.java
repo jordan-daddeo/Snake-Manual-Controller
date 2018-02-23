@@ -1,6 +1,6 @@
 package gameEngine;
 
-import genetics.DNA;
+import genetics.EDNA;
 import helpers.DoubleMath;
 
 import java.awt.Color;
@@ -39,7 +39,7 @@ public class ESnake {
 
 	// basic snake attributes:
 	public ArrayList<PhysicalCircle> snakeSegments = new ArrayList<PhysicalCircle>(100);
-	public DNA dna;
+	public EDNA dna;
 	public ESNet brainNet;
 	public double age = 0;
 	public double angle;
@@ -52,23 +52,23 @@ public class ESnake {
 	public String debugOutput = "";
 
 	/**
-	 * Initializes a new snake with given DNA
+	 * Initializes a new snake with given EDNA
 	 * 
 	 * @param dna
-	 *            if null, it generates a random new DNA
+	 *            if null, it generates a random new EDNA
 	 * @param world
 	 *            reference to the world for spawn point
 	 */
 
-	public ESnake(DNA dna, World world) {
+	public ESnake(EDNA dna, World world) {
 		double x = Math.random() * (world.width - 2 * wallCollisionThreshold - 2 * GameLoop.globalCircleRadius) + wallCollisionThreshold
 				+ GameLoop.globalCircleRadius;
 		double y = Math.random() * (world.height - 2 * wallCollisionThreshold - 2 * GameLoop.globalCircleRadius) + wallCollisionThreshold
 				+ GameLoop.globalCircleRadius;
 
-		int dnalength = ESNet.calcNumberOfCoeffs(stageSizes, isNNSymmetric) + 1;
+		int dnalength = ESNet.calcNumberOfCoeffs(stageSizes) + 1;
 		if (dna == null) {
-			this.dna = new DNA(true, dnalength);
+			this.dna = new EDNA(true, dnalength);
 		} else {
 			this.dna = dna;
 		}
@@ -79,7 +79,7 @@ public class ESnake {
 		this.angle = Math.atan2(world.height / 2 - y, world.width / 2 - x);
 		// setup brain:
 		brainNet = new ESNet(stageSizes);
-		reloadFromDNA();
+		reloadFromEDNA();
 		score = 0;
 		deathFade = 180;
 		isDead = false;
@@ -88,11 +88,11 @@ public class ESnake {
 	}
 
 	/**
-	 * reloads the network and the color from DNA
+	 * reloads the network and the color from EDNA
 	 */
-	public void reloadFromDNA() {
-		brainNet.loadCoeffs(this.dna.data);
-		this.hue = (float) this.dna.data[this.dna.data.length - 1] / 256f;
+	public void reloadFromEDNA() {
+		brainNet.loadCoeffs(this.dna.op);
+		this.hue = (float) this.dna.op[this.dna.op.length - 1] / 256f;
 	}
 
 	/**
