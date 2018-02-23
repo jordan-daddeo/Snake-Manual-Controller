@@ -1,5 +1,3 @@
-package gameEngine;
-
 package neuralNetwork;
 
 public class EStage {
@@ -34,7 +32,7 @@ public class EStage {
 	}
 	public static double sigmoid(double x) {
 		//TODO: wtf is sigmoid
-		throw new RuntimeException("Sigma has not been implemented");
+		return 0.0;
 	}
 	public String toString(){
 		String k = "[";
