@@ -1,7 +1,5 @@
 package gameEngine;
 
-package gameEngine;
-
 import helpers.KeyboardListener;
 
 import java.awt.Color;
@@ -125,10 +123,10 @@ public class ESGame extends JComponent {
 									if (!s.update(world)) {
 										deadCount++;
 									}
-									if (s.getFitness() > currentMaxFitness && s!= ruleBased)
+									if (s.getFitness() > currentMaxFitness)
 										currentMaxFitness = s.getFitness();
 										if(currentMaxFitness > allTimeMaxFitnessNN) allTimeMaxFitnessNN = currentMaxFitness;
-									if (s.getFitness() > currentMaxFitnessRuleBased && s == ruleBased){
+									if (s.getFitness() > currentMaxFitnessRuleBased){
 										currentMaxFitnessRuleBased = s.getFitness();
 									}
 									if (s.getFitness() > bestscore) {
@@ -203,7 +201,7 @@ public class ESGame extends JComponent {
 		mutationrate = 10 / currentMaxFitness;
 		ArrayList<Snake> matingpool = makeMatingpool();
 		//TODO: change crossover function and DNA representation
-		Snake s = new Snake(parentA.crossoverBytewise(parentB, mutationrate), world);
+		Snake s = new Snake(null, world);
 		snakes.add(s);
 	}
 

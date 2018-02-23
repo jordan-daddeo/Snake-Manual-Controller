@@ -1,5 +1,6 @@
 package main;
 
+import gameEngine.ESGame;
 import gameEngine.GameLoop;
 import helpers.KeyboardListener;
 
@@ -19,10 +20,10 @@ public class MainWindow extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize( 1000, 600);
 		setExtendedState(MAXIMIZED_BOTH);
-		setTitle("Neural Net Snake Genetic Algorithm");
+		setTitle("Neural Net Snake Genetic Algorithm Except Better");
 		KeyboardListener keyb = new KeyboardListener();
 		addKeyListener(keyb);
-		add(new GameLoop(keyb));
+		add(new ESGame(keyb));
 		setVisible(true);
 	}
 
