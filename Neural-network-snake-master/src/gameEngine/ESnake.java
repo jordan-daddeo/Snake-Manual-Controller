@@ -13,7 +13,7 @@ import java.util.Random;
 import neuralNetwork.ESNet;
 import neuralNetwork.EStage;
 
-public class ESnake {
+public class ESnake implements Comparable{
 
 	// Movement constants:
 	public static final double maximumForwardSpeed = 5;
@@ -338,6 +338,14 @@ public class ESnake {
 			g.fillOval((int) (p.x - p.vy * dist / p.getAbsoluteVelocity() - size), (int) (p.y + p.vx * dist / p.getAbsoluteVelocity() - size),
 					(int) (size * 2 + 1), (int) (size * 2 + 1));
 		}
+	}
+
+	@Override
+	public int compareTo(Object other) {
+		if(other instanceof ESnake){
+			return new Double(this.getFitness()).compareTo(new Double(((ESnake) other).getFitness()));
+		}
+		return 0;
 	}
 }
 

@@ -6,8 +6,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JComponent;
 
@@ -21,11 +23,11 @@ public class ESGame extends JComponent {
 
 	// constants:
 	public static final int globalCircleRadius = 20;
-	public static final int numSnakes = 3;
+	public static final int numSnakes = 8;
+	public static final int numParents = 4;
 	public static final int numNibbles = 4;
-
+	
 	// Genetics parameter initialization:
-	public static double mutationrate = .02;
 	public double currentGeneration = 0;
 
 	// world and snakes initialization:
@@ -188,9 +190,27 @@ public class ESGame extends JComponent {
 	 * 
 	 * @return Mating pool as list
 	 */
+	@SuppressWarnings("unchecked")
 	public ArrayList<ESnake> makeMatingpool() {
-		//TODO: implement this???
 		ArrayList<ESnake> matingpool = new ArrayList<ESnake>();
+		// get maximum fitness:
+		double maxscore = 0;
+		for (ESnake s : snakes) {
+			if (s.getFitness() > maxscore ) {
+				maxscore = s.getFitness();
+			}
+		}
+
+		//sort snakes by fitness
+		LinkedList<ESnake> snakesSorted = new LinkedList<>();
+		snakesSorted.addAll(snakes);
+		Collections.sort(snakesSorted);
+		
+		//add p best snakes
+		for(int i = 0; i < numParents; i++){
+			matingpool.add(snakesSorted.get(i));
+		}
+		
 		return matingpool;
 	}
 
@@ -199,7 +219,7 @@ public class ESGame extends JComponent {
 	 * snake-list
 	 */
 	public void newSnake() {
-		mutationrate = 10 / currentMaxFitness;
+		//mutationrate = 10 / currentMaxFitness;
 		ArrayList<ESnake> matingpool = makeMatingpool();
 		int idx1 = (int) (Math.random() * matingpool.size());
 		int idx2 = (int) (Math.random() * matingpool.size());
@@ -226,7 +246,7 @@ public class ESGame extends JComponent {
 
 			g.drawString("g = " + Integer.toString((int) currentGeneration), 20, 205);
 			g.setFont(new Font("Arial", 0, 32));
-			g.drawString("Mut. Prob.: " + String.format("%1$,.3f", mutationrate), 20, 305);
+			//g.drawString("Mut. Prob.: " + String.format("%1$,.3f", mutationrate), 20, 305);
 			g.drawString("Max fitness: " + Integer.toString((int) currentMaxFitness), 20, 355);
 
 			
