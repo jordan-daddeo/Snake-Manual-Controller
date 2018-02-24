@@ -11,6 +11,7 @@ import java.util.LinkedList;
 
 import javax.swing.JComponent;
 
+import genetics.DNA;
 import genetics.EDNA;
 
 public class ESGame extends JComponent {
@@ -200,8 +201,11 @@ public class ESGame extends JComponent {
 	public void newSnake() {
 		mutationrate = 10 / currentMaxFitness;
 		ArrayList<ESnake> matingpool = makeMatingpool();
-		//TODO: change crossover function and DNA representation
-		ESnake s = new ESnake(null, world);
+		int idx1 = (int) (Math.random() * matingpool.size());
+		int idx2 = (int) (Math.random() * matingpool.size());
+		EDNA parentA = matingpool.get(idx1).dna;
+		EDNA parentB = matingpool.get(idx2).dna;
+		ESnake s = new ESnake(parentA.crossoverWithMutation(parentB), world);
 		snakes.add(s);
 	}
 

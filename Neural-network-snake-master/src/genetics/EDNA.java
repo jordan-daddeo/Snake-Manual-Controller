@@ -14,7 +14,7 @@ public class EDNA {
 	public byte op[];
 	public byte sigma;
 	
-	public static final double alpha = 0.5;
+	public static final byte alpha = 2;
 	
 	public EDNA(boolean random, int size){
 		op = new byte[size];
@@ -35,7 +35,7 @@ public class EDNA {
 
 		//whole arithmetic crossover
 		for(int i = 0; i < other.op.length; i++){
-			
+			newdna.op[i] = (byte) (other.op[i] / alpha + op[i] / alpha);
 		}
 		
 		//mutation of op
