@@ -202,12 +202,13 @@ public class ESGame extends JComponent {
 		}
 
 		//sort snakes by fitness
-		LinkedList<ESnake> snakesSorted = new LinkedList<>();
+		ArrayList<ESnake> snakesSorted = new ArrayList<>();
 		snakesSorted.addAll(snakes);
 		Collections.sort(snakesSorted);
 		
 		//add p best snakes
-		for(int i = 0; i < numParents; i++){
+		for(int i = snakesSorted.size()-1; i > snakesSorted.size() -1 - numParents; i--){
+			//System.out.println(i+" "+snakesSorted.get(i).getFitness());
 			matingpool.add(snakesSorted.get(i));
 		}
 		
