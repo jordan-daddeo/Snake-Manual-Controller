@@ -250,6 +250,12 @@ public class ESGame extends JComponent {
 			//g.drawString("Mut. Prob.: " + String.format("%1$,.3f", mutationrate), 20, 305);
 			g.drawString("Max fitness: " + Integer.toString((int) currentMaxFitness), 20, 355);
 
+			g.setFont(new Font("Arial", 0, 16));
+			g.drawString("#: <Sigma> | <Fitness>", 330, 180);
+			for(int i = 0; i < snakes.size(); i++){
+				ESnake s = snakes.get(i);
+				g.drawString("#"+i+": "+s.dna.sigma+ "|"+s.getFitness(), 330, 205+20*i);
+			}
 			
 			// print timeline:
 			synchronized (fitnessTimeline) {
