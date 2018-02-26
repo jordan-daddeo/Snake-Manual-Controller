@@ -38,6 +38,8 @@ public class EDNA {
 			newdna.op[i] = (byte) (other.op[i] / alpha + op[i] / alpha);
 		}
 		
+		newdna.sigma = (byte) (other.sigma / alpha + sigma / alpha);
+		
 		//mutation of op
 		// implement formula (1/[sigma*(2*PI)^0.5])(e^(-0.5*(x/sigma)^2))
 		if (newdna.sigma > 0) {
