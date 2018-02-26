@@ -39,9 +39,29 @@ public class EDNA {
 		}
 		
 		//mutation of op
-		
-		//mutation of sigma
-		
+		// implement formula (1/[sigma*(2*PI)^0.5])(e^(-0.5*(x/sigma)^2))
+		if (newdna.sigma > 0) {
+			for (byte val : newdna.op) {
+				float expo = val/newdna.sigma;
+				expo = (float) Math.pow(expo, 2);
+				expo *= -0.5f;
+				float eValue = (float) Math.exp(expo);
+				float constValue = (float) (1 / (newdna.sigma*(Math.pow(2*Math.PI, 0.5f))));
+				float mute = constValue * eValue;
+				
+				val += mute;
+			}
+			
+			//mutation of sigma
+			float expo = 1.0f;
+			expo = (float) Math.pow(expo, 2);
+			expo *= -0.5f;
+			float eValue = (float) Math.exp(expo);
+			float constValue = (float) (1 / (newdna.sigma*(Math.pow(2*Math.PI, 0.5f))));
+			float mute = constValue * eValue;
+			
+			newdna.sigma += mute;
+		}
 		return newdna;
 	}
 }
