@@ -19,8 +19,8 @@ public class GameLoop extends JComponent {
 
 	// constants:
 	public static final int globalCircleRadius = 20;
-	public static final int numSnakes = 3;
-	public static final int numNibbles = 4;
+	public static final int numSnakes = 8;
+	public static final int numNibbles = 6;
 
 	// Genetics parameter initialization:
 	public static double mutationrate = .02;

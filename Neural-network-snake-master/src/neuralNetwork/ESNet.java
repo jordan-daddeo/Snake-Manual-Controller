@@ -11,7 +11,7 @@ public class ESNet {
 	/**
 	 * Constructor
 	 * 
-	 * @param stageSizes
+	 * @param stageSizes 
 	 *            Array specifying the sizes of each layer, for example
 	 *            {48,16,16,2}.
 	 *            First stage has no nonlinearity
@@ -59,7 +59,7 @@ public class ESNet {
 		return stages[stages.length - 1].output;
 	}
 	/**
-	 * Calculates the need number of coefficients for given Neural Net architecture
+	 * Calculates the needed number of coefficients for given Neural Net architecture
 	 * Used for DNA-length 
 	 * 
 	 * @param stageSizes	Array specifying the sizes of each layer, for example
