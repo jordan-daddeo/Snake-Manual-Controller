@@ -24,11 +24,14 @@ public class ESGame extends JComponent {
 	// constants:
 	public static final int globalCircleRadius = 20;
 	public static final int numSnakes = 8;
-	public static final int numParents = 4;
+	public static final int numParents = 6;
 	public static final int numNibbles = 4;
 	
 	// Genetics parameter initialization:
 	public double currentGeneration = 0;
+	public int intGeneration = 0;
+	public boolean newEra = true;
+	
 
 	// world and snakes initialization:
 	public World world = new World();
@@ -50,7 +53,6 @@ public class ESGame extends JComponent {
 	public double currentMaxFitnessRuleBased = 0;
 
 	// Mode control:
-	public boolean singleSnakeModeActive = false;
 	public boolean displayStatisticsActive = false;
 	public boolean simulationPaused = false;
 
@@ -65,6 +67,7 @@ public class ESGame extends JComponent {
 			private long simulationLastMillis;
 			private long statisticsLastMillis;
 
+			@SuppressWarnings("unchecked")
 			public void run() {
 				simulationLastMillis = System.currentTimeMillis() + 100; // initial
 																			// wait
@@ -80,16 +83,6 @@ public class ESGame extends JComponent {
 							// Controls
 							char keyCode = (char) keyb.getKey();
 							switch (keyCode) {
-							case ' ': // space
-								if (!singleSnakeModeActive) {
-									singleSnakeModeActive = true;
-									displayStatisticsActive = false;
-									backupSnakes.clear();
-									backupSnakes.addAll(snakes);
-									snakes.clear();
-									snakes.add(new ESnake(bestDna, world));
-								}
-								break;
 							case 'A': // a = pause
 								simulationPaused = true;
 								break;
@@ -113,7 +106,7 @@ public class ESGame extends JComponent {
 								int deadCount = 0;
 								world.update(getWidth(), getHeight());
 								synchronized (fitnessTimeline) {
-									if (world.clock - statisticsLastMillis > 1000 && !singleSnakeModeActive) {
+									if (world.clock - statisticsLastMillis > 1000) {
 										fitnessTimeline.addLast(currentMaxFitness);
 										currentMaxFitness = 0;
 										if (fitnessTimeline.size() >= world.width / 2) {
@@ -137,17 +130,22 @@ public class ESGame extends JComponent {
 										bestDna = s.dna;
 									}
 								}
-								if (deadCount > 0 && singleSnakeModeActive) {
-									singleSnakeModeActive = false;
-									snakes.clear();
-									snakes.addAll(backupSnakes);
-
-								} else {
-									// new snakes
-									for (int i = 0; i < deadCount; i++) {
-										newSnake();
-										currentGeneration += 1 / (double) numSnakes;
+								// new snakes
+								for (int i = 0; i < deadCount; i++) {
+									newSnake();
+									currentGeneration += 1 / (double) numSnakes;
+									if(((int) currentGeneration) > intGeneration) {
+										intGeneration = (int) currentGeneration;
+										newEra = true;
 									}
+									if((((int) currentGeneration) % 50 == 0) && newEra){
+										newEra = false;
+										ArrayList<ESnake> snakesSorted = new ArrayList<>();
+										snakesSorted.addAll(snakes);
+										Collections.sort(snakesSorted);
+										System.out.println("Generation: " + Integer.toString(intGeneration) + " Sigma: " + snakesSorted.get(0).dna.sigma + " Max Fitness: " + Double.toString(currentMaxFitness));
+									}
+									
 								}
 								Iterator<ESnake> it = snakes.iterator();
 								while (it.hasNext()) {
@@ -245,7 +243,7 @@ public class ESGame extends JComponent {
 			g.setFont(new Font("Arial", 0, 64));
 			g.drawString("t = " + Long.toString(world.clock / 1000), 20, 105);
 
-			g.drawString("g = " + Integer.toString((int) currentGeneration), 20, 205);
+			g.drawString("g = " + Integer.toString(intGeneration), 20, 205);
 			g.setFont(new Font("Arial", 0, 32));
 			//g.drawString("Mut. Prob.: " + String.format("%1$,.3f", mutationrate), 20, 305);
 			g.drawString("Max fitness: " + Integer.toString((int) currentMaxFitness), 20, 355);
@@ -275,10 +273,6 @@ public class ESGame extends JComponent {
 			}
 		}
 		
-		// neural net:
-		if (singleSnakeModeActive) {
-			//TODO: brain net
-		}
 		// snakes:
 		synchronized (snakes) {
 			for (ESnake s : snakes)

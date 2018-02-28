@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -25,6 +26,8 @@ public class GameLoop extends JComponent {
 	// Genetics parameter initialization:
 	public static double mutationrate = .02;
 	public double currentGeneration = 0;
+	public int intGeneration = 0;
+	public boolean newEra = true;
 
 	// world and snakes initialization:
 	public World world = new World();
@@ -68,6 +71,7 @@ public class GameLoop extends JComponent {
 			private long simulationLastMillis;
 			private long statisticsLastMillis;
 
+			@SuppressWarnings("unchecked")
 			public void run() {
 				simulationLastMillis = System.currentTimeMillis() + 100; // initial
 																			// wait
@@ -173,6 +177,17 @@ public class GameLoop extends JComponent {
 									for (int i = 0; i < deadCount; i++) {
 										newSnake();
 										currentGeneration += 1 / (double) numSnakes;
+										if(((int) currentGeneration) > intGeneration) {
+											intGeneration = (int) currentGeneration;
+											newEra = true;
+										}
+										if((((int) currentGeneration) % 50 == 0) && newEra){
+											newEra = false;
+											ArrayList<Snake> snakesSorted = new ArrayList<>();
+											snakesSorted.addAll(snakes);
+											Collections.sort(snakesSorted);
+											System.out.println("Generation: " + Integer.toString(intGeneration) + " Max Fitness: " + Double.toString(currentMaxFitness));
+										}
 									}
 								}
 								Iterator<Snake> it = snakes.iterator();

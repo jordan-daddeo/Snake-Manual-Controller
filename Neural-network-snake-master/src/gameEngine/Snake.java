@@ -13,7 +13,7 @@ import java.util.Random;
 import neuralNetwork.NeuralNet;
 import neuralNetwork.Stage;
 
-public class Snake {
+public class Snake implements Comparable {
 
 	// Movement constants:
 	public static final double maximumForwardSpeed = 5;
@@ -407,5 +407,12 @@ public class Snake {
 			g.fillOval((int) (p.x - p.vy * dist / p.getAbsoluteVelocity() - size), (int) (p.y + p.vx * dist / p.getAbsoluteVelocity() - size),
 					(int) (size * 2 + 1), (int) (size * 2 + 1));
 		}
+	}
+	
+	public int compareTo(Object other) {
+		if(other instanceof Snake){
+			return new Double(this.getFitness()).compareTo(new Double(((Snake) other).getFitness()));
+		}
+		return 0;
 	}
 }
