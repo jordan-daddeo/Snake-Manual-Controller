@@ -15,7 +15,8 @@ public class EDNA {
 	public byte sigma;
 	
 	public static final boolean DISCRETE_RECOMBINATION = true;
-	public static final float ALPHA = 0.5f;
+	public static final float ALPHA = 0.9f;
+	public static final int MUTATION_MULTIPLIER = 10;
 	
 	public static final boolean DEBUG_OUTPUT_DNA = false;
 	
@@ -39,7 +40,7 @@ public class EDNA {
 		
 		//discrete recombination: randomly select one of two alleles
 		if(DISCRETE_RECOMBINATION){
-			for(int i = 0; i < op.length-1; i++){
+			for(int i = 0; i < op.length; i++){
 				newdna.op[i] = (byte) (random.nextBoolean()?other.op[i]:op[i]);
 				}
 			
@@ -48,7 +49,7 @@ public class EDNA {
 		//whole arithmetic crossover
 		//used for hue, poor results if used for other genes
 		else{
-			for(int i = 0; i < op.length-1; i++){
+			for(int i = 0; i < op.length; i++){
 				newdna.op[i] = (byte) (other.op[i] * ALPHA + op[i] * (1-ALPHA));
 			}
 			newdna.sigma = (byte) (other.sigma * ALPHA + sigma * (1-ALPHA));
@@ -57,18 +58,25 @@ public class EDNA {
 		
 		//mutation of op
 		// implement formula (1/[sigma*(2*PI)^0.5])(e^(-0.5*(x/sigma)^2))
-		if (newdna.sigma > 0) {
+		
+//		for(int i = 0; i < newdna.op.length; i++){
+//			op[i]+= random.nextGaussian() * newdna.sigma;
+//		}
+//		
+//		newdna.sigma += random.nextGaussian() * newdna.sigma;
+		
+		if (newdna.sigma != 0) {
 			for (int i = 0; i < newdna.op.length; i++) {
-				float expo = newdna.op[i]/newdna.sigma;
+				float expo = newdna.op[i]/Math.abs(newdna.sigma);
 				expo = (float) Math.pow(expo, 2);
 				expo *= -0.5f;
 				float eValue = (float) Math.exp(expo);
-				float constValue = (float) (1 / (newdna.sigma*(Math.pow(2*Math.PI, 0.5f))));
+				float constValue = (float) (1 / (Math.abs(newdna.sigma)*(Math.pow(2*Math.PI, 0.5f))));
 				float mute = constValue * eValue;
 				
 				byte oldval = newdna.op[i];
-				newdna.op[i] += mute * sigma * 10;
-				//System.out.println("val"+oldval+" mutation: "+mute * sigma * 10+" new val:"+newdna.op[i]);
+				newdna.op[i] += mute * newdna.sigma * MUTATION_MULTIPLIER;
+				//System.out.println("val"+oldval+" mutation: "+mute * newdna.sigma * MUTATION_MULTIPLIER+" new val:"+newdna.op[i]);
 			}
 			
 			//mutation of sigma
@@ -76,10 +84,10 @@ public class EDNA {
 			expo = (float) Math.pow(expo, 2);
 			expo *= -0.5f;
 			float eValue = (float) Math.exp(expo);
-			float constValue = (float) (1 / (newdna.sigma*(Math.pow(2*Math.PI, 0.5f))));
+			float constValue = (float) (1 / (Math.abs(newdna.sigma)*(Math.pow(2*Math.PI, 0.5f))));
 			float mute = constValue * eValue;
-			//System.out.println(mute * sigma * 50);
-			newdna.sigma += mute * sigma * 10;
+			//System.out.println(mute * newdna.sigma * MUTATION_MULTIPLIER);
+			newdna.sigma += mute * newdna.sigma * MUTATION_MULTIPLIER;
 		}
 		if (DEBUG_OUTPUT_DNA) {
 			
