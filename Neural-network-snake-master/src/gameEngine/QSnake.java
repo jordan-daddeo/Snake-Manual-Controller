@@ -305,7 +305,7 @@ public class QSnake implements Comparable {
 		
 		//select new action via selection policy (in this case, epsilon-greedy):
 		double rand = Math.random();
-		if(rand >= EPSILON){
+		if(rand + this.getFitness() / 4000 >= EPSILON ){
 			//a' = whichever a' gives max Q(s',a')
 			double maxQ = Double.NEGATIVE_INFINITY;
 			for(int a = 0; a < ACTIONS.length; a++){
