@@ -29,6 +29,7 @@ public class QSnake implements Comparable {
 	private static final double ALPHA = 0.8;
 	private static final double GAMMA = 0.8;
 	private static final double EPSILON = 0.05;
+	public static final boolean FITNESS_DEPENDENT = false;
 	public static final double[] ACTIONS = {maximumAngularSpeed/2,0, -maximumAngularSpeed, -maximumAngularSpeed/2, maximumAngularSpeed};
 	
 	// scoring constants:
@@ -305,7 +306,8 @@ public class QSnake implements Comparable {
 		
 		//select new action via selection policy (in this case, epsilon-greedy):
 		double rand = Math.random();
-		if(rand + this.getFitness() / 4000 >= EPSILON ){
+		if(FITNESS_DEPENDENT) rand += this.getFitness() / (600 /*stops randomness entirely at this fitness*/ / EPSILON);
+		if(rand >= EPSILON ){
 			//a' = whichever a' gives max Q(s',a')
 			double maxQ = Double.NEGATIVE_INFINITY;
 			for(int a = 0; a < ACTIONS.length; a++){
